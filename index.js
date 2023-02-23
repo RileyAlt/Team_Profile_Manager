@@ -1,6 +1,7 @@
 // Packages needed for this application
 const fs = require('fs');
 const inquirer = require('inquirer');
+import Intern from "lib/intern";
 
 const employeeInfo = [];
 
@@ -12,9 +13,19 @@ const MANAGER_QUESTIONS = [
       message: 'What is your Team Manager name?'
     },
     {
+        type: 'input',
+        name: 'id',
+        message: 'What is your managers id'
+    },
+    {
       type: 'input',
       name: 'email',
       message: 'What is your managers email?'
+    },
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: 'What is your managers office number?'
     }
 ];
 
@@ -27,86 +38,70 @@ const ADD_EMPLOYEE_QUESTIONS = [
     }
 ]
 
-const EMPLOYEE_QUESTIONS = [
+const EMPLOYEE_ENGINEER_QUESTIONS = [
     {
         type: 'input',
         name: 'name',
-        message: 'What is this persons name'
+        message: 'What is their name'
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: 'What is their id'
     },
     {
         type: 'input',
         name: 'email',
-        message: 'What is this persons email'
+        message: 'What is their email'
+    },
+    {
+        type: 'input',
+        name: 'github',
+        message: 'What is your GitHub their username?'
     }
 ]
 
-//Correctly displaying asnwers on HTML document
-function renderTeamManagerInfo(answers) {
-  return `
-  
-  ${answers.teammanager}
-  ${answers.email}
-
-  ${answers.number}
-
-  ${answers.employeeid}
-  `;
-}
-
-
-/*
-employeeInfo will eventually look like:
-
-[
+const EMPLOYEE_INTERN_QUESTIONS = [
     {
-        id: 1,
-        name: "Nate",
-        email: "whatever",
-        title: "manager"
+        type: 'input',
+        name: 'name',
+        message: 'What is their name'
     },
     {
-        id: 2,
-        name: "Riley",
-        email: "whatever",
-        title: "engineer"
+        type: 'input',
+        name: 'id',
+        message: 'What is their id'
     },
     {
-        id: 3,
-        name: "Trev",
-        email: "whatever",
-        title: "engineer"
+        type: 'input',
+        name: 'email',
+        message: 'What is their email'
     },
     {
-        id: 4,
-        name: "Harrison",
-        email: "whatever",
-        title: "intern"
-    },
-    {
-        id: 5,
-        name: "Max",
-        email: "whatever",
-        title: "intern"
+        type: 'input',
+        name: 'school',
+        message: 'What school are they from?'
     }
 ]
-*/
-
 
 function generateHTML(){
     // At this point, use employeeInfo to generate HTML
   
-    var html = '';
+    var html = `<div class="header-card"
+                    <header> My Team </header>
+                </div>`;
     for (const employee of employeeInfo) {
         // Generate a card for employee
         html += `
             <div class="employee-card"> 
-                <h1 class="employee-name"> ${employee.name} </h1>
-                <h1 class="employee-title"> ${employee.title} </h1>
-                <a href="mailto:${employee.email}">${employee.email}</a>
+                <h1 class="employee-name"> ${employee.getName()} </h1>
+                <h1 class="employee-id"> ${employee.getId()} </h1>
+                <h1 class="employee-role"> ${employee.getRole()} </h1>
+                <a href="mailto:${employee.email}">${employee.getEmail()}</a>
             </div>`
     }
   
-    fs.writeFile('GENERATED_MyTeam.html', html, (err) => {
+    fs.writeFile('dist/GENERATED_MyTeam.html', html, (err) => {
       if (err)
         console.log("I got an error!", err);
       else {
@@ -115,19 +110,33 @@ function generateHTML(){
     });
 }
 
+function addIntern() {
+    inquirer
+        .prompt(EMPLOYEE_INTERN_QUESTIONS)
+        .then(answers => {
+            employeeInfo.push(new Intern(answers.id, answers.name, answers.email, answers.school));
+            askForEmployee();
+        });
+}
+
+function addEngineer() {
+    inquirer
+        .prompt(EMPLOYEE_ENGINEER_QUESTIONS)
+        .then(answers => {
+            employeeInfo.push(new Engineer(answers.id, answers.name, answers.email, answers.github));
+            askForEmployee();
+        });
+}
+
 function askForEmployee() {
     inquirer
         .prompt(ADD_EMPLOYEE_QUESTIONS)
         .then(answers => {
             const typeOfEmployeeToAdd = answers.employeeType;
-            if (typeOfEmployeeToAdd == 'Intern' || typeOfEmployeeToAdd == 'Engineer') {
-                inquirer
-                    .prompt(EMPLOYEE_QUESTIONS)
-                    .then(answers => {
-                        answers['title'] = typeOfEmployeeToAdd;
-                        employeeInfo.push(answers)
-                        askForEmployee();
-                    });
+            if (typeOfEmployeeToAdd == 'Intern') {
+                addIntern();
+            } else if (typeOfEmployeeToAdd == 'Engineer') {
+                addEngineer();
             } else {
                 // The user has chosen they are done adding employees, so now generate the HTML
                 generateHTML();
@@ -145,8 +154,7 @@ function init() {
     inquirer
         .prompt(MANAGER_QUESTIONS)
         .then(answers => {
-            answers['title'] = 'Manager';
-            employeeInfo.push(answers);
+            employeeInfo.push(new Manager(answers.id, answers.name, answers.email, answers.officeNumber))
             askForEmployee();
         })
         .catch(error => {
@@ -154,24 +162,5 @@ function init() {
         });
 }
   
-
 //Running app
 init();
-
-
-
-//constructor builder
-class Employee {
-    constructor(employeeData) {
-      this.name = employeeData.name;
-      this.email = employeeData.email;
-    }
-  
-    printInfo() {
-      console.log(`your name is ${this.name} `);
-      console.log(`email is  ${this.email}`);
-    }
-}
-
-module.exports = Employee;
-   

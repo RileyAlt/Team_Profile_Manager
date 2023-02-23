@@ -1,38 +1,11 @@
-const Vehicle = require('./vehicle');
+import { assert } from "console";
+import { Employee } from "../lib/employee";
 
-class Car extends Vehicle {
-  constructor(id, color, passengers) {
-    super(id, 4, 'beep');
-    this.color = color;
-    this.passengers = passengers;
-  }
+// Test that employee methods work
+const newEmployee = new Employee(1, "riley", "riley@fruity.com")
 
-  useHorn() {
-    console.log(this.sound);
-  }
-
-  checkPassengers() {
-    if (this.passengers.length > 4) {
-      console.log(
-        'This car only seats 4 people. You have too many passengers!'
-      );
-    } else {
-      console.log(`You have room for ${4 - this.passengers.length} people.`);
-    }
-  }
+if ("riley" == newEmployee.getName()) {
+    console.log("Test 1 passed!")
+} else {
+    console.log("Test 1 failed :( ")
 }
-
-const carPassengers = [
-  'Aristotle',
-  'Confucius',
-  'Socrates',
-  'Lao-Tzu',
-  'Plato',
-];
-
-const car = new Car(15, 'blue', carPassengers);
-
-console.log('---CAR---');
-car.printInfo();
-car.useHorn();
-car.checkPassengers();
