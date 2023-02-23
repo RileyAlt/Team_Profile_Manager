@@ -1,5 +1,4 @@
-import { assert } from "console";
-import { Engineer } from "../lib/employee";
+const Engineer = require("../lib/employee");
 
 // Test that employee methods work
 const newEngineer = new Engineer(1, "riley", "riley@fruity.com")

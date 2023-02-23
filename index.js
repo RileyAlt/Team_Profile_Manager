@@ -1,7 +1,9 @@
 // Packages needed for this application
 const fs = require('fs');
 const inquirer = require('inquirer');
-import Intern from "lib/intern";
+const Manager = require("./lib/manager");
+const Intern = require("./lib/intern");
+const Engineer = require("./lib/engineer");
 
 const employeeInfo = [];
 
@@ -87,7 +89,7 @@ const EMPLOYEE_INTERN_QUESTIONS = [
 function generateHTML(){
     // At this point, use employeeInfo to generate HTML
   
-    var html = `<div class="header-card"
+    var html = `<div class="header-card">
                     <header> My Team </header>
                 </div>`;
     for (const employee of employeeInfo) {
