@@ -29,7 +29,7 @@ The program runs as follows:
 
 ![alt text](./src/Product_example.png)
 
-![alt text](./src/Product_Video.webm)
+![alt text](./src/Product_Video.mp4)
 
 ### Licensing
 
