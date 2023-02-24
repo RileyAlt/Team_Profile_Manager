@@ -87,21 +87,35 @@ const EMPLOYEE_INTERN_QUESTIONS = [
 ]
 
 function generateHTML(){
-    // At this point, use employeeInfo to generate HTML
-  
-    var html = `<div class="header-card">
-                    <header> My Team </header>
-                </div>`;
+    var html = `
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>My Team</title>
+                <link rel="stylesheet" href="GENERATED_MyTeam.css">
+            </head>
+            <body>
+                <h1> MY TEAM </h1>
+    `;
+
     for (const employee of employeeInfo) {
         // Generate a card for employee
-        html += `
-            <div class="employee-card"> 
-                <h1 class="employee-name"> ${employee.getName()} </h1>
-                <h1 class="employee-id"> ${employee.getId()} </h1>
-                <h1 class="employee-role"> ${employee.getRole()} </h1>
-                <a href="mailto:${employee.email}">${employee.getEmail()}</a>
-            </div>`
+        html += employee.getHtmlOutput();
     }
+
+    html += `
+            </body>
+        </html>
+    `;
+
+    var css = `
+        .employee-card {
+            border: 1px solid black;
+        }
+    `;
   
     fs.writeFile('dist/GENERATED_MyTeam.html', html, (err) => {
       if (err)
@@ -110,6 +124,14 @@ function generateHTML(){
         console.log("HTML generated successfully\n");
       }
     });
+
+    fs.writeFile('dist/GENERATED_MyTeam.css', css, (err) => {
+        if (err)
+          console.log("I got an error!", err);
+        else {
+          console.log("CSS generated successfully\n");
+        }
+      });
 }
 
 function addIntern() {
