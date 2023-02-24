@@ -29,6 +29,8 @@ The program runs as follows:
 
 ![alt text](./src/Product_example.png)
 
+![alt text](./src/Product_Video.webm)
+
 ### Licensing
 
 MIT
